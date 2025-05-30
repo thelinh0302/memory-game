@@ -1,23 +1,38 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-interface IWordCard {
+const WordCard: React.FC<{
     word: string;
-    isMatched: boolean;
-    isWrong: boolean;
-    onClick: VoidFunction;
-}
-
-const WordCard = ({ word, isMatched, isWrong, onClick }: IWordCard) => {
-    return <motion.div onClick={onClick} initial={false} animate={{
-        scale: isMatched ? 1.2 : 1,
-        rotate: isWrong ? [0, -10, 10, -10, 10, 0] : 0,
-        backgroundColor: isMatched ? '#a6e3a1' : isWrong ? '#f38ba8' : '#f5f5f5'
-    }}
-        transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-        className="p-3 m-3 rounded-[8px] w-[150px] text-center font-bold"
-    >
-        {word}
-    </motion.div>
-}
+    isCorrect?: boolean;
+    isWrong?: boolean;
+    style?: React.CSSProperties;
+  }> = ({ word, isCorrect, isWrong }) => {
+    return (
+        <motion.div
+          layout
+          animate={{
+            backgroundColor: isCorrect
+              ? '#a6e3a1'
+              : isWrong
+              ? '#f38ba8'
+              : '#fff',
+            rotate: isWrong ? [0, 0, -10, 10, 0] : 0,
+            scale: isCorrect ? 1.05 : 1,
+          }}
+          transition={{ type: 'keyframes', stiffness: 300, damping: 20 }}
+          style={{
+            padding: '10px 16px',
+            margin: '6px',
+            borderRadius: '6px',
+            border: '1px solid #ccc',
+            cursor: 'grab',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            background: '#fff',
+          }}
+        >
+          {word}
+        </motion.div>
+      );
+  };
 export default WordCard
