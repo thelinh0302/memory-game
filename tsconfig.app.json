@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "paths": {
       "@pages/*": ["pages/*"],
-      "@components/*": ["components/*"]
+      "@components/*": ["components/*"],
+      "@utils/*": ["utils/*"]
     },
 
     /* Bundler mode */
