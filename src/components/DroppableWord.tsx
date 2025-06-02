@@ -11,7 +11,7 @@ const DroppableWord: React.FC<{
 
   return (
     <div ref={setNodeRef}>
-      <WordCard word={word} isMatched={matched} isWrong={wrong} />
+      <WordCard word={word} isCorrect={matched} isWrong={wrong} />
     </div>
   );
 };

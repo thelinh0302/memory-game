@@ -1,140 +1,131 @@
 import DraggableWord from "@components/DraggableWord";
 import WordCard from "@components/WordCard";
-import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
-import { useState } from "react";
-import { shuffle } from "@utils/suffle";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import DropSlot from "@components/DropPair";
+import { Onboarding } from "@components/Onboarding";
+import { AnimatePresence, motion } from "framer-motion";
+import { useDragDropVocabulary } from "@hooks/useDragDropVocabulary";
 
 const HomePage = () => {
-  const pairs: Record<string, string> = {
-    forest: "forêt",
-    sibling: "frère et sœur",
-    cereal: "céréale",
-    desk: "bureau",
-    camel: "chameau",
-    butter: "beurre",
-    bicycle: "vélo",
-    railroad: "chemin de fer",
-    folder: "dossier",
-    weekly: "hebdomadaire",
-    hungry: "faim",
-    limestone: "calcaire",
-  };
-  const allWords = shuffle([...Object.keys(pairs), ...Object.values(pairs)]);
+  const {
+    showOnboarding,
+    handleStart,
+    pool,
+    activeWord,
+    dropPairs,
+    graded,
+    handleToggle,
+    handleDragEnd,
+    setActiveWord,
+    checkCorrect,
+  } = useDragDropVocabulary();
 
-  const [pool, setPool] = useState<string[]>(allWords);
-  const [activeWord, setActiveWord] = useState<string | null>(null);
-  const [dropPairs, setDropPairs] = useState<Array<[string | null, string | null]>>(
-    Array.from({ length: Object.keys(pairs).length }, () => [null, null])
-  );
-  const [graded, setGraded] = useState(false);
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!active || !over) return;
-  
-    const word = String(active.id);
-    const overId = over.id.toString();
-    const match = overId.match(/^slot-(\d+)-(\d+)$/);
-    if (!match) return;
-  
-    const index = Number(match[1]);
-    const slot = Number(match[2]) - 1;
-  
-    setDropPairs((prev) => {
-      const newPairs = prev.map((pair) => [...pair] as [string | null, string | null]);
-  
-      // Tìm vị trí cũ của từ đang kéo
-      let fromIndex = -1;
-      let fromSlot = -1;
-      for (let i = 0; i < newPairs.length; i++) {
-        for (let j = 0; j < 2; j++) {
-          if (newPairs[i][j] === word) {
-            fromIndex = i;
-            fromSlot = j;
-          }
-        }
-      }
-  
-      const targetWord = newPairs[index][slot]; // từ ở vị trí đích
-  
-      if (targetWord && targetWord !== word) {
-        // Hoán đổi từ
-        if (fromIndex >= 0 && fromSlot >= 0) {
-          newPairs[fromIndex][fromSlot] = targetWord;
-        }
-      } else {
-        // Nếu không có gì ở vị trí mới → xóa từ cũ
-        if (fromIndex >= 0 && fromSlot >= 0) {
-          newPairs[fromIndex][fromSlot] = null;
-        }
-  
-        // Nếu từ kéo từ pool, loại bỏ nó ở pool
-        setPool((p) => p.filter((w) => w !== word));
-      }
-  
-      newPairs[index][slot] = word;
-  
-      return newPairs;
-    });
-  
-    setActiveWord(null);
-  };
-  
-
-  const handleGrade = () => {
-    setGraded(true);
-  };
-  const checkCorrect = (pair: [string | null, string | null]) => {
-    const [a, b] = pair;
-    if (!a || !b) return null;
-    return pairs[a] === b || pairs[b] === a;
-  };
-
+  if (showOnboarding) {
+    return (
+      <AnimatePresence>
+        <Onboarding setShowOnboarding={handleStart} />
+      </AnimatePresence>
+    );
+  }
   return (
     <>
-      <DndContext
-        onDragStart={(e) => setActiveWord(String(e.active.id))}
-        onDragEnd={handleDragEnd}
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0 }}
       >
-        <div style={{ padding: 32 }}>
-          <h2 style={{ textAlign: "center" }}>🧠 Match the Word Pairs</h2>
+        <DndContext
+          onDragStart={(e) => setActiveWord(String(e.active.id))}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="p-[5rem] m-auto w-screen">
+            <h2 className="text-4xl font-extrabold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 animate-pulse text-transparent bg-clip-text">
+              Match the Word Pairs
+            </h2>
 
-          <h4>Vocabulary Pool</h4>
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            {pool.map((word) => (
-              <DraggableWord key={word} word={word} />
-            ))}
-          </div>
-
-          <h4 style={{ marginTop: 24 }}>Your Answers</h4>
-          {dropPairs.map((pair, idx) => {
-          const result = checkCorrect(pair);
-          return (
-            <div key={idx} style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-              {[0, 1].map((slot) => (
-                <DropSlot
-                    key={slot}
-                    id={`slot-${idx}-${slot + 1}`}
-                    word={pair[slot]}
-                    isCorrect={graded && result === true}
-                    isWrong={graded && result === false}
-                    activeWord={activeWord}
-                />
+            <h4 className="text-3xl mt-5 bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-transparent bg-clip-text">
+              Vocabulary
+            </h4>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {pool.map((word: string) => (
+                <DraggableWord key={word} word={word} />
               ))}
             </div>
-          );
-        })}
 
-          <div style={{ marginTop: 20 }}>
-            <button onClick={handleGrade}>GRADE</button>
+            <h4 className="text-3xl mt-5 mb-5 bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-transparent bg-clip-text">
+              Vocabulary Pool
+            </h4>
+            <div className="flex justify-center items-start">
+              <div className="grid lg:grid-cols-2 gap-8 sm:grid-cols-1">
+                <div>
+                  <div className="flex justify-between font-semibold text-gray-700 text-lg mb-2 pl-2">
+                    <div className="w-36 text-center">🇬🇧 English</div>
+                    <div className="w-36 text-center">🇫🇷 French</div>
+                  </div>
+                  {dropPairs
+                    .slice(0, Math.ceil(dropPairs.length / 2))
+                    .map((pair, idx) => {
+                      const result = checkCorrect(pair);
+                      return (
+                        <div key={idx} className="flex gap-1 mb-2 px-2">
+                          {[0, 1].map((slot) => (
+                            <DropSlot
+                              key={slot}
+                              id={`slot-${idx}-${slot + 1}`}
+                              word={pair[slot]}
+                              isCorrect={graded && result === true}
+                              isWrong={graded && result === false}
+                              activeWord={activeWord}
+                            />
+                          ))}
+                        </div>
+                      );
+                    })}
+                </div>
+
+                <div>
+                  <div className="flex justify-between font-semibold text-gray-700 text-lg mb-2 pl-2">
+                    <div className="w-36 text-center">🇬🇧 English</div>
+                    <div className="w-36 text-center">🇫🇷 French</div>
+                  </div>
+                  {dropPairs
+                    .slice(Math.ceil(dropPairs.length / 2))
+                    .map((pair, idx) => {
+                      const realIdx = idx + Math.ceil(dropPairs.length / 2);
+                      const result = checkCorrect(pair);
+                      return (
+                        <div key={realIdx} className="flex gap-1 mb-2 px-2">
+                          {[0, 1].map((slot) => (
+                            <DropSlot
+                              key={slot}
+                              id={`slot-${realIdx}-${slot + 1}`}
+                              word={pair[slot]}
+                              isCorrect={graded && result === true}
+                              isWrong={graded && result === false}
+                              activeWord={activeWord}
+                            />
+                          ))}
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 20 }}>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleToggle}
+              >
+                {graded ? "GO" : "GRADE"}
+              </button>
+            </div>
+            <DragOverlay>
+              {activeWord ? <WordCard word={activeWord} /> : null}
+            </DragOverlay>
           </div>
-
-          <DragOverlay>
-            {activeWord ? <WordCard word={activeWord} /> : null}
-          </DragOverlay>
-        </div>
-      </DndContext>
+        </DndContext>
+      </motion.div>
     </>
   );
 };

@@ -19,17 +19,9 @@ const DropSlot = ({
   return (
     <div
       ref={setNodeRef}
-      style={{
-        width: '140px',
-        minHeight: '48px',
-        border: '2px dashed #aaa',
-        borderRadius: '8px',
-        padding: '6px',
-        backgroundColor: isOver ? '#e0f7fa' : '#fafafa',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className={`lg:w-[300px] sm:w-[160px] min-h-[80px] border-2 border-dashed border-gray-400 rounded-md p-2 flex items-center justify-center transition-colors ${
+        isOver ? "bg-cyan-100" : "bg-gray-50"
+      }`}
     >
       {word && (
         <DraggableWordSlot
