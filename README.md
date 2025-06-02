@@ -1,54 +1,88 @@
-# React + TypeScript + Vite
+# 🧠 Word Match Drag Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Welcome screen](https://github.com/thelinh0302/memory-game/blob/main/src/assets/onboarding.png)
+![Matching interface](https://github.com/thelinh0302/memory-game/blob/main/src/assets/home.png)
+![Scored interface](https://github.com/thelinh0302/memory-game/blob/main/src/assets/score.png)
 
-Currently, two official plugins are available:
+A responsive, interactive vocabulary matching game built with React, TypeScript, DnD Kit, and Framer Motion. Designed to help users practice English–French word pair recognition in a fun and visual way.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* 🧩 Drag and drop word matching
+* 🟢 Grade & score system
+* 🖱 Reset functionality with GO button
+* 📱 Responsive 2-column layout using Tailwind CSS
+* 🎨 Gradient background, animated heading
+* 👋 Onboarding welcome screen
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/thelinh0302/memory-game.git
+cd memory-game
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+### 3. Start development server
+
+```bash
+npm run dev
+```
+
+### 4. Open in browser
+
+Navigate to `http://localhost:5173` (or whatever port Vite shows).
+
+---
+
+## 🛠 Tech Stack
+
+* [React](https://reactjs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [@dnd-kit](https://dndkit.com/) — for drag and drop
+* [Framer Motion](https://www.framer.com/motion/) — for animations
+* [Tailwind CSS](https://tailwindcss.com/) — for utility-first styling
+* [Vite](https://vitejs.dev/) — dev server and bundler
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   └── WordCard.tsx
+├── App.tsx          # Main game logic
+├── index.tsx        # React entry
+├── assets/
+├── styles/
+└── ...
+```
+
+---
+
+## ✅ To-do / Ideas
+
+* Add difficulty levels
+* Support audio for pronunciation
+* Leaderboard tracking
+* Mobile-first UX improvements
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+Made with 💜 by [Your Name](https://github.com/thelinh0302)
