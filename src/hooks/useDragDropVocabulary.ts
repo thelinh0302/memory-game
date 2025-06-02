@@ -112,6 +112,10 @@ export const useDragDropVocabulary = () => {
     setIsStarted(false);
   };
 
+  const correctCount = dropPairs.reduce((acc, pair) => {
+    return acc + (checkCorrect(pair) ? 1 : 0);
+  }, 0);
+
   return {
     showOnboarding,
     pool,
@@ -123,5 +127,6 @@ export const useDragDropVocabulary = () => {
     setActiveWord,
     checkCorrect,
     handleStart,
+    correctCount,
   };
 };

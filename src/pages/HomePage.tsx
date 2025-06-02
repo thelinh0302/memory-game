@@ -18,6 +18,7 @@ const HomePage = () => {
     handleDragEnd,
     setActiveWord,
     checkCorrect,
+    correctCount,
   } = useDragDropVocabulary();
 
   if (showOnboarding) {
@@ -55,6 +56,11 @@ const HomePage = () => {
             <h4 className="text-3xl mt-5 mb-5 bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-transparent bg-clip-text">
               Vocabulary Pool
             </h4>
+            {graded && (
+              <div className="text-lg font-semibold text-green-700 mb-2">
+                ✅ Correct pairs: {correctCount} / {dropPairs.length}
+              </div>
+            )}
             <div className="flex justify-center items-start">
               <div className="grid lg:grid-cols-2 gap-8 sm:grid-cols-1">
                 <div>
